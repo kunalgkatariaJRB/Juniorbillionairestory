@@ -8,3 +8,4 @@ export async function fetchShop(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+ 
