@@ -19,6 +19,7 @@
     "nodemailer": "^7.0.13",
     "openai": "^4.56.0",
     "pdfkit": "^0.17.2",
+    "postmark": "^4.0.7",
     "puppeteer": "^24.34.0",
     "resend": "^6.9.2",
     "sharp": "^0.34.5"
