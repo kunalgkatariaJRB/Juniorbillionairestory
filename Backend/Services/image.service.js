@@ -5,56 +5,146 @@ import path from "path";
 const IS_TEST_MODE = process.env.TEST_MODE === "true";
 const MAX_TEST_IMAGES = 2;
 
-/* ===============================
-   CHARACTER LOCK
-================================ */
-const getCharacterProfile = ({ name, age, gender }) => {
+// ─────────────────────────────────────────────────────────────────────────────
+// CHARACTER PROFILES
+// ─────────────────────────────────────────────────────────────────────────────
+
+const getCharacterProfile = ({ name, gender }) => {
+  const isBoy =
+    gender === "boy" || gender === "male" ||
+    gender === "Boy" || gender === "Male";
+
+  if (isBoy) {
+    return `
+CHARACTER: A small storybook boy named ${name}.
+- Face: round and soft, large dark expressive eyes with clean bright highlights,
+  tiny nose, gentle smile. Rosy pink cheeks — soft and subtle, not cartoon circles.
+- Skin: light warm peachy-cream — clean, smooth, luminous. NOT tan, NOT brown, NOT orange.
+  Rendered with smooth clean digital shading — skin looks fresh and glowing, NOT grainy or rough.
+- Hair: short dark brown hair, clean smooth shape with soft shine. NOT textured or rough.
+- Outfit (SAME EVERY PAGE): soft mint-green or sky-blue long-sleeve top, simple light grey trousers.
+  Clean smooth fabric — no rough texture. NEVER changes. NEVER orange. NEVER dark colors.
+- FULL BODY — head to feet visible. 30–40% of total image height.
+  Standing in environment. NOT cropped. NOT a portrait. NOT a bust shot.
+- Rendering: clean smooth digital illustration — luminous, crisp edges, no grain, no rough texture.
+`;
+  } else {
+    return `
+CHARACTER: A small storybook girl named ${name}.
+- Face: round and soft, large dark expressive eyes with clean bright highlights,
+  tiny nose, gentle smile. Rosy pink cheeks — soft and subtle, not cartoon circles.
+- Skin: light warm peachy-cream — clean, smooth, luminous. NOT tan, NOT brown, NOT orange.
+  Rendered with smooth clean digital shading — skin looks fresh and glowing, NOT grainy or rough.
+- Hair: long flowing dark brown hair, loose and gently wavy, soft shine.
+  Clean smooth strands with gentle movement. NOT rough or textured.
+- Outfit (SAME EVERY PAGE): soft dusty rose-pink dress, A-line, simple and sweet.
+  Clean smooth fabric. NEVER changes. NEVER orange. NEVER red. NEVER a princess gown.
+- FULL BODY — head to feet visible. 30–40% of total image height.
+  Standing in environment. NOT cropped. NOT a portrait. NOT a bust shot.
+- Rendering: clean smooth digital illustration — luminous, crisp edges, no grain, no rough texture.
+`;
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STYLE ANCHOR — Modern digital children's book, NOT vintage
+// ─────────────────────────────────────────────────────────────────────────────
+
+const getStyleAnchor = ({ gender }) => {
+  const isBoy =
+    gender === "boy" || gender === "male" ||
+    gender === "Boy" || gender === "Male";
+
   return `
-- Human child ONLY (never animal, never fantasy creature)
-- ${age}-year-old ${gender === "boy" ? "boy" : "girl"}
-- Same face, same hairstyle, same hair color, same eye color, same outfit style in ALL images
-- Large expressive eyes, soft skin, smooth hair
-- Simple modern children's clothing consistent across ALL pages
-- Age-appropriate proportions — round face, soft features
-- CONSISTENCY across all pages is MORE important than creativity
+ILLUSTRATION STYLE:
+Modern premium digital children's book illustration — 2020s style.
+Clean, luminous, crisp digital painting. Like top-tier ArtStation or Behance
+children's book concept art. Published by major modern publishers (Nosy Crow, Macmillan).
+
+THIS IS DIGITAL ART — clean, smooth, luminous, modern. NOT vintage. NOT old-school.
+NOT crayon texture. NOT pencil grain. NOT rough matte surface. NOT 1980s illustration style.
+
+RENDERING:
+- Clean smooth digital painting — Procreate or Photoshop digital brush style
+- Soft smooth color gradients — no grain, no rough texture, no paper texture
+- Characters: smooth clean skin rendering with soft luminous glow
+- Colors are CLEAN and VIVID but not neon — fresh, bright, modern
+- Crisp soft edges — clean separation between elements, no blurriness, no rough edges
+- Smooth soft shadows — gentle and clean, not harsh, not grainy
+- Everything looks FRESH, CLEAN, MODERN — like it was illustrated in 2024
+
+ATMOSPHERE & LIGHTING:
+- Background: soft cool lavender-blue gradient — smooth, clean, luminous
+  Like a clear soft sky at dusk — #B8C4E0 to #D4CCEC — smooth gradient, NOT flat, NOT textured
+- Background is open and airy — 50–60% soft gradient sky/atmosphere behind character
+- ONE magical warm glowing light element — soft golden or warm white glow with clean bloom
+- Smooth volumetric glow — clean, luminous, modern light effect — NOT grainy
+- Character warmly and cleanly lit — smooth highlights, luminous skin
+- 3–5 soft translucent floating bubbles/orbs — clean, glassy, luminous pastel tones
+
+COLOR PALETTE — clean and modern:
+- Background: smooth cool lavender-blue (#B8C4E0 to #D4CCEC) — clean gradient
+- Character skin: clean luminous peachy-cream — smooth and fresh
+- Outfit: girl = soft dusty pink | boy = clean mint/sky blue — both clean and bright
+- Warm glow: golden-white or soft warm pink — one focal light source
+- Floating orbs: clean glassy pastel — soft pink, mint, lavender, cream
+- Overall: CLEAN, BRIGHT, LUMINOUS — modern digital palette, NOT muted, NOT vintage
+
+COMPOSITION:
+- Full body character — 30–40% of image height — head to feet always visible
+- Wide open scene — environment surrounds and frames the character
+- Open space above — clean gradient sky
+- Character lower-center, grounded naturally in scene
+- Scene setting rendered cleanly in background — recognizable but not dominant
+- Clean simple foreground — a few soft flowers or ground elements, clean and minimal
+- NOT a portrait. NOT cropped. FULL BODY in a full scene.
+
+GENDER LOCK:
+${isBoy
+    ? "BOY — short clean dark hair, fixed mint/sky-blue top + grey trousers. Full body. NEVER long hair. NEVER a dress."
+    : "GIRL — long clean flowing dark hair, fixed dusty rose-pink dress. Full body. NEVER short hair. NEVER pants. NEVER orange/red."}
+
+NEGATIVE PROMPT:
+vintage illustration, old-school, crayon texture, pencil grain, rough matte surface,
+gouache texture, watercolor paper grain, 1970s style, 1980s style, aged illustration,
+portrait shot, cropped, bust shot, close-up, chibi, flat cartoon, anime, 3D render,
+Pixar style, photorealistic, brown skin, tan skin, orange skin, warm golden background,
+orange outfit, red outfit, princess costume, outfit change, harsh shadows, grainy texture,
+rough texture, muted dull colors, faded colors, text in image, watermark, logo
 `;
 };
 
-/* ===============================
-   EMOTION BY PAGE
-================================ */
-const getEmotionForPage = (pageIndex) => {
-  if (pageIndex <= 1) return "curious and calm, wide eyes full of wonder";
-  if (pageIndex <= 3) return "slightly worried but hopeful, gentle frown with soft eyes";
-  if (pageIndex <= 5) return "confused or struggling, eyebrows slightly raised";
-  if (pageIndex <= 7) return "determined and trying hard, focused expression";
-  if (pageIndex === 8) return "confident and focused, small proud smile";
-  if (pageIndex === 9) return "happy and relieved, big bright smile";
-  return "peaceful, proud, and joyful — glowing with happiness";
+// ─────────────────────────────────────────────────────────────────────────────
+// EMOTION PER PAGE
+// ─────────────────────────────────────────────────────────────────────────────
+
+const getEmotionForPage = (i) => {
+  if (i <= 1) return "gentle wonder — soft wide eyes gazing upward, peaceful small smile";
+  if (i <= 3) return "curious uncertainty — head gently tilted, soft thoughtful expression";
+  if (i <= 5) return "delighted surprise — wide bright eyes, soft open smile of wonder";
+  if (i <= 7) return "quiet determination — calm steady eyes, small confident smile";
+  if (i === 8) return "soft pride — warm gentle smile, bright peaceful eyes";
+  if (i === 9) return "pure joy — open smile, eyes bright and crinkled with happiness";
+  return "peaceful contentment — soft radiant smile, serene and calm";
 };
 
-/* ===============================
-   CAMERA ANGLE BY PAGE
-================================ */
-const getCameraAngle = (pageIndex) => {
-  const angles = [
-    "wide establishing shot showing full environment",
-    "medium shot, character centered, warm background",
-    "close-up on face showing emotion clearly",
-    "low angle hero shot making character look brave",
-    "over-the-shoulder shot showing character's perspective",
-    "wide shot showing character small in a big world",
-    "medium close-up, character in action",
-    "dynamic diagonal composition, character mid-motion",
-    "eye-level medium shot, character looking determined",
-    "warm wide shot, character in peaceful environment",
-  ];
-  return angles[pageIndex] || "medium shot, character centered";
+// ─────────────────────────────────────────────────────────────────────────────
+// STORY TEXT CLEANER
+// ─────────────────────────────────────────────────────────────────────────────
+
+const cleanPageText = (text) => {
+  return text
+    .replace(/\*\*/g, "")
+    .replace(/\*/g, "")
+    .replace(/#{1,6}\s/g, "")
+    .replace(/_{1,2}([^_]+)_{1,2}/g, "$1")
+    .trim();
 };
 
-/* ===============================
-   IMAGE GENERATION
-================================ */
+// ─────────────────────────────────────────────────────────────────────────────
+// MAIN EXPORT
+// ─────────────────────────────────────────────────────────────────────────────
+
 export async function generateImages(
   visualScenes,
   pages,
@@ -64,96 +154,79 @@ export async function generateImages(
 ) {
   const startIndex = options.startIndex || 0;
   const folderPath = path.join("images", bookId);
-
   fs.mkdirSync(folderPath, { recursive: true });
 
   const limit = IS_TEST_MODE
     ? Math.min(MAX_TEST_IMAGES, pages.length)
     : pages.length;
 
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  console.log(`🎨 Generating images in Marvel flat vector style...`);
+  const isBoy =
+    childProfile.gender === "boy" || childProfile.gender === "male" ||
+    childProfile.gender === "Boy" || childProfile.gender === "Male";
 
+  console.log(
+    `🎨 Generating — ${childProfile.name}, ${isBoy ? "BOY" : "GIRL"} — modern digital storybook style`
+  );
+
+  const characterProfile = getCharacterProfile(childProfile);
+  const styleAnchor = getStyleAnchor(childProfile);
   const imagePaths = [];
 
   for (let i = 0; i < limit; i++) {
     const pageNumber = String(startIndex + i + 1).padStart(2, "0");
     const imagePath = path.join(folderPath, `page_${pageNumber}.png`);
 
-    // ♻️ REUSE IMAGE IF EXISTS
     if (fs.existsSync(imagePath)) {
-      console.log(`♻️ Reusing image page ${pageNumber}`);
+      console.log(`♻️  Reusing page ${pageNumber}`);
       imagePaths.push(imagePath);
       continue;
     }
 
-    // 🧪 EXTRA SAFETY (TEST MODE)
-    if (IS_TEST_MODE && i >= MAX_TEST_IMAGES) {
-      console.log("🧪 TEST MODE: image generation stopped");
-      break;
-    }
+    if (IS_TEST_MODE && i >= MAX_TEST_IMAGES) break;
+
+    const cleanedPageText = cleanPageText(pages[i]);
 
     const prompt = `
-ILLUSTRATION STYLE:
-Flat vector children's book illustration with Marvel-inspired energy. Bold clean outlines,
-dynamic compositions, soft muted pastels mixed with vivid accent colors, warm cinematic lighting.
-Think Marvel storybook art — heroic poses, expressive faces, strong contrast between foreground
-and background. No text, no letters, no speech bubbles, no capes unless story mentions them.
+${styleAnchor}
 
-CHARACTER (must match EXACTLY across all pages):
-${getCharacterProfile(childProfile)}
+${characterProfile}
 
-SCENE TO ILLUSTRATE:
+EXPRESSION THIS PAGE: ${getEmotionForPage(startIndex + i)}
+
+SCENE:
 ${visualScenes[i]}
 
-STORY CONTEXT (ground truth):
-"${pages[i]}"
+STORY CONTEXT (do NOT render as text in image):
+"${cleanedPageText}"
 
-SETTING RULES:
-- Location: must match the story page exactly — no invented locations
-- If story mentions school: show classroom or school environment
-- If story mentions home: show indoor home setting
-- If story mentions outdoors: match that exact outdoor place
-- If story mentions forest: show a magical vibrant forest
-- If story mentions space: show a pastel outer space scene
-- If story mentions water or ocean: show a magical ocean scene
-- If story mentions sky or flying: show child in a bright open sky
-- Time of day: daytime unless story says otherwise
-- NEVER mix locations or replace activities
+PAGE COMPOSITION REMINDER:
+- ${childProfile.name} shown FULL BODY — head to feet — in a wide open scene
+- Character is 30–40% of image height — small in frame, environment around them
+- Clean smooth cool lavender-blue background sky — open and airy
+- One warm clean glowing light source for magic
+- Modern clean digital illustration quality — luminous, crisp, fresh — NOT vintage, NOT grainy
+`.trim();
 
-COMPOSITION:
-- Camera: ${getCameraAngle(i)}
-- Lighting: Warm cinematic light, directional from upper left, soft shadows
-- Mood: ${getEmotionForPage(i)}
-- Character expression AND body posture must clearly reflect the mood
-- Marvel-inspired dynamic angle where appropriate — avoid flat static poses
+    try {
+      const result = await openai.images.generate({
+        model: "gpt-image-1",
+        prompt,
+        n: 1,
+        size: "1536x1024",
+        quality: "medium",
+        output_format: "png",
+      });
 
-BACKGROUND:
-- Richly detailed but not cluttered
-- Complementary to character — background should never overpower the child
-- Use depth: sharp foreground, slightly soft background
-
-OUTPUT: Single illustration only. No borders, no frames, no page numbers, no watermarks.
-`;
-
-    // ✅ MODEL AND QUALITY UNCHANGED FROM ORIGINAL
-    const result = await openai.images.generate({
-      model: "gpt-image-1.5",
-      prompt,
-      size: "1024x1024",
-      quality: "medium",
-    });
-
-    fs.writeFileSync(
-      imagePath,
-      Buffer.from(result.data[0].b64_json, "base64")
-    );
-
-    imagePaths.push(imagePath);
-    console.log(`🎨 Image generated: page ${pageNumber} [Marvel Flat Vector]`);
+      const b64 = result.data[0].b64_json;
+      fs.writeFileSync(imagePath, Buffer.from(b64, "base64"));
+      imagePaths.push(imagePath);
+      console.log(`✅ Page ${pageNumber} saved`);
+    } catch (err) {
+      console.error(`❌ Page ${pageNumber} failed:`, err.message);
+      imagePaths.push(null);
+    }
   }
 
   return imagePaths;
